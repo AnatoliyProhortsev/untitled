@@ -16,6 +16,7 @@ SOURCES += \
     pool.cpp
 
 HEADERS += \
+    constants.h \
     gscene.h \
     mainwindow.h \
     pball.h \

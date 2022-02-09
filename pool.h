@@ -4,18 +4,19 @@
 #include <pball.h>
 #include <gscene.h>
 
-#include <QPropertyAnimation>
-#include <QGraphicsItemAnimation>
+#include <QLayout>
+#include <QPushButton>
 #include <QGraphicsSceneMouseEvent>
 #include <QMouseEvent>
-#include <QTimeLine>
 #include <QDebug>
+#include <QTimer>
 
 class Pool: public QObject
 {
     Q_OBJECT
 public:
     Pool();
+    ~Pool();
     QVector<PBall*> getBallsAr();
 public slots:
     void start();

@@ -13,7 +13,9 @@ Pool::Pool()
     qreal tHeight = m_view->height();
     qreal tWidth = m_view->width();
 
-    QRectF sceneRectangle = QRectF(QPointF(0,0), QSizeF(tWidth,tHeight));
+    QRectF sceneRectangle = QRectF(QPointF(0,0),
+                                   QSizeF(tWidth,tHeight));
+
     m_scene = new GScene(sceneRectangle);
     m_view->setScene(m_scene);
     m_scene->balls = &m_balls;
@@ -28,8 +30,8 @@ Pool::Pool()
     m_VLayout->addSpacing(20);
     m_VLayout->setContentsMargins(40,100,40,100);
 
-    QString namesAr[3] = {"Начать", "Обновить стол", "Вернуть шар"};
 
+    QString namesAr[3] = {"Начать", "Обновить стол", "Вернуть шар"};
     for(int i = 0; i < 3; i++)
     {
         m_buttons.insert(i, new QPushButton(namesAr[i]));
@@ -78,26 +80,41 @@ Pool::Pool()
     m_timer = new QTimer;
     m_timer->setInterval(interval);
 
-    connect(m_buttons.at(0), SIGNAL(clicked()), this, SLOT(start()));
-    connect(m_buttons.at(2), SIGNAL(clicked()), m_scene, SLOT(resetBall()));
-    connect(m_timer, SIGNAL(timeout()), m_scene, SLOT(advance()));
+    connect(m_buttons.at(0),
+            SIGNAL(clicked()),
+            this, SLOT(start()));
 
+    connect(m_buttons.at(2),
+            SIGNAL(clicked()),
+            m_scene, SLOT(resetBall()));
+
+    connect(m_timer,
+            SIGNAL(timeout()),
+            m_scene, SLOT(advance()));
 }
 
 void Pool::start()
 {
     for(int i = 0; i<16; i++)
-    {
         m_scene->addItem(m_balls.at(i));
-    }
     for(int i = 0; i < 6; i++)
-    {
         m_scene->addItem(m_holes.at(i));
-    }
+
     m_timer->start();
 }
 
-QVector<PBall*> Pool::getBallsAr()
+Pool::~Pool()
 {
-    return m_balls;
+    for(auto iterator: m_balls)
+        delete iterator;
+    for(auto iterator: m_holes)
+        delete iterator;
+
+    delete m_scene;
+    delete m_VLayout;
+    delete m_HLayout;
+    delete m_view;
+    delete m_widget;
 }
+
+QVector<PBall*> Pool::getBallsAr(){return m_balls;}
