@@ -19,12 +19,12 @@ void GScene::advance()
        if(abs(balls->at(i)->getSpeedX()) <= 0.1)
            balls->at(i)->setSpeedX(0);
        else
-           balls->at(i)->setSpeedX(balls->at(i)->getSpeedX() *quoff);
+           balls->at(i)->setSpeedX(balls->at(i)->getSpeedX() *FRICTION_QUOFF);
 
        if(abs(balls->at(i)->getSpeedY()) <= 0.1)
            balls->at(i)->setSpeedY(0);
        else
-           balls->at(i)->setSpeedY(balls->at(i)->getSpeedY() *quoff);
+           balls->at(i)->setSpeedY(balls->at(i)->getSpeedY() *FRICTION_QUOFF);
     }
  }
 
@@ -71,30 +71,30 @@ void GScene::colliding(PBall* ball)
                 qreal b2y = balls->at(i)->y();
                 qreal v2x = balls->at(i)->getSpeedX();
                 qreal v2y = balls->at(i)->getSpeedY();
-                qreal v1Ox = v1x - (mass*v1x+mass*v2x)/(2*mass);
-                qreal v1Oy = v1y - (mass*v1y+mass*v2y)/(2*mass);
-                qreal vx = (mass*v1x+mass*v2x)/(2*mass);
-                qreal vy = (mass*v1y+mass*v2y)/(2*mass);
+                qreal v1Ox = v1x - (BALL_MASS*v1x+BALL_MASS*v2x)/(2*BALL_MASS);
+                qreal v1Oy = v1y - (BALL_MASS*v1y+BALL_MASS*v2y)/(2*BALL_MASS);
+                qreal vx = (BALL_MASS*v1x+BALL_MASS*v2x)/(2*BALL_MASS);
+                qreal vy = (BALL_MASS*v1y+BALL_MASS*v2y)/(2*BALL_MASS);
                 qreal v2Ox = v2x-vx; qreal v2Oy = v2y-vy;
 
                 qreal rv1 = v1Ox*(b1x-b2x)+v1Oy*(b1y-b2y);
                 qreal rv2 = v2Ox*(b2x-b1x)+v2Oy*(b2y-b1y);
 
-                ball->setSpeedX(v1x - rv1/2/ballR/ballR*(b1x-b2x));
-                ball->setSpeedY(v1y- rv2/2/ballR/ballR*(b1y-b2y));
+                ball->setSpeedX(v1x - rv1/2/BALL_RADIUS/BALL_RADIUS*(b1x-b2x));
+                ball->setSpeedY(v1y- rv2/2/BALL_RADIUS/BALL_RADIUS*(b1y-b2y));
 
-                balls->at(i)->setSpeedX(v2x-rv2/2/ballR/ballR*(b2x-b1x));
-                balls->at(i)->setSpeedY(v2y-rv2/2/ballR/ballR*(b2y-b1y));
+                balls->at(i)->setSpeedX(v2x-rv2/2/BALL_RADIUS/BALL_RADIUS*(b2x-b1x));
+                balls->at(i)->setSpeedY(v2y-rv2/2/BALL_RADIUS/BALL_RADIUS*(b2y-b1y));
 
                 if(b1x > b2x)
-                    ball->setPos(b1x+10,b1y);
+                    ball->setPos(b1x+6,b1y);
                 else if(b1x < b2x)
-                    ball->setPos(b1x-10,b1y);
+                    ball->setPos(b1x-6,b1y);
 
                 if(b1y > b2y)
-                    ball->setPos(b1x, b1y+10);
+                    ball->setPos(b1x, b1y+6);
                 else if(b1y > b2y)
-                    ball->setPos(b1x, b1y-10);
+                    ball->setPos(b1x, b1y-6);
             }
         }
 

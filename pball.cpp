@@ -10,8 +10,8 @@ PBall::PBall(QColor color, qreal speedX,qreal speedY, QPoint coord):
 
 QRectF PBall::getBallRect()
 {
-    return QRectF(QPointF(m_coord.x()-ballR, m_coord.y()-ballR),
-                  QPointF(m_coord.x()+ballR, m_coord.y()+ballR));
+    return QRectF(QPointF(m_coord.x()-BALL_RADIUS, m_coord.y()-BALL_RADIUS),
+                  QPointF(m_coord.x()+BALL_RADIUS, m_coord.y()+BALL_RADIUS));
 }
 
 QPolygonF PBall::getBallPolygon()
@@ -22,8 +22,8 @@ QPolygonF PBall::getBallPolygon()
     for(int count = 0; count<100; count++)
     {
         qreal angleRad = curAngle*M_PI/180;
-        polygon<<QPointF(this->x() + ballR*cos(angleRad),
-                         this->y() + ballR*sin(angleRad));
+        polygon<<QPointF(this->x() + BALL_RADIUS*cos(angleRad),
+                         this->y() + BALL_RADIUS*sin(angleRad));
         curAngle+=step;
     }
     return polygon;
@@ -32,7 +32,7 @@ QPolygonF PBall::getBallPolygon()
 void PBall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setBrush(m_color);
-    painter->drawEllipse(m_coord, ballR, ballR);
+    painter->drawEllipse(m_coord, BALL_RADIUS, BALL_RADIUS);
 }
 
 qreal PBall::getSpeedX(){return m_speedX;}

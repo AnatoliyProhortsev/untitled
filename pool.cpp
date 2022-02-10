@@ -78,7 +78,7 @@ Pool::Pool()
     m_widget->show();
 
     m_timer = new QTimer;
-    m_timer->setInterval(interval);
+    m_timer->setInterval(UPDATE_INTERVAL);
 
     connect(m_buttons.at(0),
             SIGNAL(clicked()),
