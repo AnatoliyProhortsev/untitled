@@ -16,7 +16,7 @@ public:
     GScene(QRectF sceneRect);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void hitHole(int index);
-    void colliding(PBall* ball);
+    void colliding(PBall* ball1, PBall* ball2);
     QVector<PBall*>* balls;
     bool ballClickMode = true;
 public slots:

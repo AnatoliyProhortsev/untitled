@@ -10,21 +10,79 @@ void GScene::advance()
     QPointF secondPos;
     for (int i = 0; i < balls->count() ;i++)
     {
-       colliding(balls->at(i));
-       secondPos = QPointF(balls->at(i)->x() + balls->at(i)->getSpeedX(),
-                           balls->at(i)->y() + balls->at(i)->getSpeedY());
+        PBall* ball = balls->at(i);
+        for(int j = i+1; j<balls->count(); j++)
+        {
+            if(ball->getBallPolygon().intersects(balls->at(j)->getBallPolygon()))
+                colliding(ball, balls->at(j));
+        }
 
-       balls->at(i)->setPos(secondPos);
+       secondPos = QPointF(ball->x() + ball->getSpeedX(),
+                           ball->y() + ball->getSpeedY());
 
-       if(abs(balls->at(i)->getSpeedX()) <= 0.1)
-           balls->at(i)->setSpeedX(0);
+       ball->setPos(secondPos);
+
+       if(abs(ball->getSpeedX()) <= 0.1)
+           ball->setSpeedX(0);
        else
-           balls->at(i)->setSpeedX(balls->at(i)->getSpeedX() *FRICTION_QUOFF);
+           ball->setSpeedX(ball->getSpeedX() *FRICTION_QUOFF);
 
-       if(abs(balls->at(i)->getSpeedY()) <= 0.1)
-           balls->at(i)->setSpeedY(0);
+       if(abs(ball->getSpeedY()) <= 0.1)
+           ball->setSpeedY(0);
        else
-           balls->at(i)->setSpeedY(balls->at(i)->getSpeedY() *FRICTION_QUOFF);
+           ball->setSpeedY(ball->getSpeedY() *FRICTION_QUOFF);
+
+       qreal x = ball->x();
+       qreal y = ball->y();
+       qreal v1x = ball->getSpeedX();
+       qreal v1y = ball->getSpeedY();
+       if(x <= 5)
+           {
+               if((y > 235 && y < 255)
+                       || (y < 5 && y > -10)
+                       || (y < 545 && y > 540))
+                   hitHole(i);
+               else
+               {
+                   ball->setPos(5, y);
+                   ball->setSpeedX(-v1x);
+                   ball->setSpeedY(v1y);
+               }
+           }else if(ball->x() >= 395)
+           {
+               if((y > 235 && y < 255)
+                       || (y < 5 && y > -10)
+                       || (y < 545 && y > 540))
+                   hitHole(i);
+               else
+               {
+                   ball->setPos(395, y);
+                   ball->setSpeedX(-v1x);
+                   ball->setSpeedY(v1y);
+               }
+           }
+
+           if(y <= -10)
+           {
+               if((x < 7) || (x > 393))
+                   hitHole(i);
+               else
+               {
+                   ball->setPos(x, -10);
+                   ball->setSpeedX(v1x);
+                   ball->setSpeedY(-v1y);
+               }
+           }else if(y >= 545)
+           {
+               if((x < 7) || (x > 393))
+                   hitHole(i);
+               else
+               {
+                   ball->setPos(x, 545);
+                   ball->setSpeedX(v1x);
+                   ball->setSpeedY(-v1y);
+               }
+           }
     }
  }
 
@@ -53,99 +111,57 @@ void GScene::hitHole(int index)
     balls->at(index)->setSpeedY(0);
 }
 
-void GScene::colliding(PBall* ball)
+void GScene::colliding(PBall* ball1, PBall* ball2)
 {
-    QPolygonF polygon = ball->getBallPolygon();
-    qreal b1y = ball->y();
-    qreal b1x = ball->x();
-    qreal v1x = ball->getSpeedX();
-    qreal v1y = ball->getSpeedY();
+    QPolygonF polygon = ball1->getBallPolygon();
+    qreal b1y = ball1->y();
+    qreal b1x = ball1->x();
+    qreal v1x = ball1->getSpeedX();
+    qreal v1y = ball1->getSpeedY();
 
-    for(int i = 0; i<balls->count(); i++)
+    qreal b2x = ball2->x();
+    qreal b2y = ball2->y();
+    qreal v2x = ball2->getSpeedX();
+    qreal v2y = ball2->getSpeedY();
+    qreal v1Ox = v1x - (BALL_MASS*v1x+BALL_MASS*v2x)/(2*BALL_MASS);
+    qreal v1Oy = v1y - (BALL_MASS*v1y+BALL_MASS*v2y)/(2*BALL_MASS);
+    qreal vx = (BALL_MASS*v1x+BALL_MASS*v2x)/(2*BALL_MASS);
+    qreal vy = (BALL_MASS*v1y+BALL_MASS*v2y)/(2*BALL_MASS);
+    qreal v2Ox = v2x-vx; qreal v2Oy = v2y-vy;
+
+    qreal rv1 = v1Ox*(b1x-b2x)+v1Oy*(b1y-b2y);
+    qreal rv2 = v2Ox*(b2x-b1x)+v2Oy*(b2y-b1y);
+
+    ball1->setSpeedX(v1x - rv1/2/BALL_RADIUS/BALL_RADIUS*(b1x-b2x));
+    ball1->setSpeedY(v1y- rv2/2/BALL_RADIUS/BALL_RADIUS*(b1y-b2y));
+
+    ball2->setSpeedX(v2x-rv2/2/BALL_RADIUS/BALL_RADIUS*(b2x-b1x));
+    ball2->setSpeedY(v2y-rv2/2/BALL_RADIUS/BALL_RADIUS*(b2y-b1y));
+
+    qreal d; //На какое расстояние шары "зашли" в друг друга (делённое на два)
+    if(b1x > b2x)
     {
-        if(polygon != balls->at(i)->getBallPolygon())
-        {
-            if(polygon.intersects(balls->at(i)->getBallPolygon()))
-            {
-                qreal b2x = balls->at(i)->x();
-                qreal b2y = balls->at(i)->y();
-                qreal v2x = balls->at(i)->getSpeedX();
-                qreal v2y = balls->at(i)->getSpeedY();
-                qreal v1Ox = v1x - (BALL_MASS*v1x+BALL_MASS*v2x)/(2*BALL_MASS);
-                qreal v1Oy = v1y - (BALL_MASS*v1y+BALL_MASS*v2y)/(2*BALL_MASS);
-                qreal vx = (BALL_MASS*v1x+BALL_MASS*v2x)/(2*BALL_MASS);
-                qreal vy = (BALL_MASS*v1y+BALL_MASS*v2y)/(2*BALL_MASS);
-                qreal v2Ox = v2x-vx; qreal v2Oy = v2y-vy;
-
-                qreal rv1 = v1Ox*(b1x-b2x)+v1Oy*(b1y-b2y);
-                qreal rv2 = v2Ox*(b2x-b1x)+v2Oy*(b2y-b1y);
-
-                ball->setSpeedX(v1x - rv1/2/BALL_RADIUS/BALL_RADIUS*(b1x-b2x));
-                ball->setSpeedY(v1y- rv2/2/BALL_RADIUS/BALL_RADIUS*(b1y-b2y));
-
-                balls->at(i)->setSpeedX(v2x-rv2/2/BALL_RADIUS/BALL_RADIUS*(b2x-b1x));
-                balls->at(i)->setSpeedY(v2y-rv2/2/BALL_RADIUS/BALL_RADIUS*(b2y-b1y));
-
-                if(b1x > b2x)
-                    ball->setPos(b1x+6,b1y);
-                else if(b1x < b2x)
-                    ball->setPos(b1x-6,b1y);
-
-                if(b1y > b2y)
-                    ball->setPos(b1x, b1y+6);
-                else if(b1y > b2y)
-                    ball->setPos(b1x, b1y-6);
-            }
-        }
-
+        d = (2*BALL_RADIUS - b1x + b2x)/2;
+        ball1->setPos(b1x + d, b1y);
+        ball2->setPos(b2x - d, b2y);
     }
-
-    if(b1x <= 5)
+    else
     {
-        if((b1y > 235 && b1y < 255)
-                || (b1y < 5 && b1y > -10)
-                || (b1y < 545 && b1y > 540))
-            hitHole(balls->indexOf(ball));
-        else
-        {
-            ball->setPos(5, b1y);
-            ball->setSpeedX(-v1x);
-            ball->setSpeedY(v1y);
-        }
-    }else if(ball->x() >= 395)
-    {
-        if((b1y > 235 && b1y < 255)
-                || (b1y < 5 && b1y > -10)
-                || (b1y < 545 && b1y > 540))
-            hitHole(balls->indexOf(ball));
-        else
-        {
-            ball->setPos(395, b1y);
-            ball->setSpeedX(-v1x);
-            ball->setSpeedY(v1y);
-        }
+        d = (2*BALL_RADIUS - b2x + b1x)/2;
+        ball1->setPos(b1x - d, b1y);
+        ball2->setPos(b2x + d, b2y);
     }
-
-    if(ball->y() <= -10)
+    if(b1y > b2y)
     {
-        if((b1x < 7) || (b1x > 393))
-            hitHole(balls->indexOf(ball));
-        else
-        {
-            ball->setPos(b1x, -10);
-            ball->setSpeedX(v1x);
-            ball->setSpeedY(-v1y);
-        }
-    }else if(b1y >= 545)
+        d = (2*BALL_RADIUS - b1y + b2y)/2;
+        ball1->setPos(b1x, b1y + d);
+        ball2->setPos(b2x, b2y - d);
+    }
+    else
     {
-        if((b1x < 7) || (b1x > 393))
-            hitHole(balls->indexOf(ball));
-        else
-        {
-            ball->setPos(b1x, 545);
-            ball->setSpeedX(v1x);
-            ball->setSpeedY(-v1y);
-        }
+        d = (2*BALL_RADIUS - b2y + b1y)/2;
+        ball1->setPos(b1x, b1y - d);
+        ball2->setPos(b2x, b2y + d);
     }
 }
 
