@@ -17,8 +17,8 @@ public:
     qreal getSpeedY();
     void setSpeedX(qreal speed);
     void setSpeedY(qreal speed);
-    QRectF getBallRect();
     QPolygonF getBallPolygon();
+    QRectF getBallRect();
 private:
     QRectF m_rect;
     QPolygonF m_polygon;

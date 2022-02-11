@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QTimer>
+#include <QBrush>
 
 class Pool: public QObject
 {

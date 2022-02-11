@@ -121,7 +121,9 @@ compiler_rcc_clean:
 	-$(DEL_FILE) release\qrc_resources.cpp
 release/qrc_resources.cpp: ../resources.qrc \
 		D:/Programms/Qt/5.15.2/mingw81_64/bin/rcc.exe \
-		../images/table.png
+		../images/table.png \
+		../images/logo.png \
+		../images/8ball.jpg
 	D:\Programms\Qt\5.15.2\mingw81_64\bin\rcc.exe -name resources ..\resources.qrc -o release\qrc_resources.cpp
 
 compiler_moc_predefs_make_all: release/moc_predefs.h
@@ -543,6 +545,7 @@ release/moc_pool.cpp: ../pool.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/QTimer \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qtimer.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qbasictimer.h \
+		D:/Programms/Qt/5.15.2/mingw81_64/include/QtGui/QBrush \
 		release/moc_predefs.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/bin/moc.exe
 	D:\Programms\Qt\5.15.2\mingw81_64\bin\moc.exe $(DEFINES) --include "E:/Projects/Qt/Pool 81/untitled/build/release/moc_predefs.h" -ID:/Programms/Qt/5.15.2/mingw81_64/mkspecs/win32-g++ -I"E:/Projects/Qt/Pool 81/untitled" -ID:/Programms/Qt/5.15.2/mingw81_64/include -ID:/Programms/Qt/5.15.2/mingw81_64/include/QtWidgets -ID:/Programms/Qt/5.15.2/mingw81_64/include/QtGui -ID:/Programms/Qt/5.15.2/mingw81_64/include/QtANGLE -ID:/Programms/Qt/5.15.2/mingw81_64/include/QtCore -I. -ID:/Programms/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++ -ID:/Programms/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32 -ID:/Programms/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward -ID:/Programms/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include -ID:/Programms/Qt/Tools/mingw810_64/lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed -ID:/Programms/Qt/Tools/mingw810_64/x86_64-w64-mingw32/include ..\pool.h -o release\moc_pool.cpp
@@ -870,7 +873,8 @@ release/main.o: ../main.cpp ../mainwindow.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtWidgets/qabstractbutton.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/QTimer \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qtimer.h \
-		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qbasictimer.h
+		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qbasictimer.h \
+		D:/Programms/Qt/5.15.2/mingw81_64/include/QtGui/QBrush
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\main.cpp
 
 release/mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
@@ -1293,7 +1297,8 @@ release/pool.o: ../pool.cpp ../pool.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtGui/qicon.h \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/QTimer \
 		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qtimer.h \
-		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qbasictimer.h
+		D:/Programms/Qt/5.15.2/mingw81_64/include/QtCore/qbasictimer.h \
+		D:/Programms/Qt/5.15.2/mingw81_64/include/QtGui/QBrush
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\pool.o ..\pool.cpp
 
 release/qrc_resources.o: release/qrc_resources.cpp 

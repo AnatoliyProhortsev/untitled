@@ -1,0 +1,10 @@
+debug/border.o
+debug/gscene.o
+debug/main.o
+debug/mainwindow.o
+debug/pball.o
+debug/pool.o
+debug/qrc_resources.o
+debug/moc_gscene.o
+debug/moc_mainwindow.o
+debug/moc_pool.o

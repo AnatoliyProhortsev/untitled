@@ -9,7 +9,6 @@ Pool::Pool()
 
     m_view = new QGraphicsView(m_widget);
     m_view->resize(400,530);
-
     qreal tHeight = m_view->height();
     qreal tWidth = m_view->width();
 
